@@ -45,6 +45,12 @@ const StatusIndicator = ({ status, className }) => {
             text: 'text-status-running-text',
             border: 'border-status-running-main'
         },
+        'in production': {
+            bg: 'bg-gray-50',
+            dot: 'bg-green-800',
+            text: 'text-gray-600',
+            border: 'border-gray-300'
+        },
     };
 
     const config = statusConfig[status?.toLowerCase()] || statusConfig.offline;

@@ -48,12 +48,10 @@ const MachineList = () => {
                                     <span className="text-text-secondary font-medium">Efficiency</span>
                                     <span className="text-text-primary font-bold">{machine.efficiency}%</span>
                                 </div>
-                                <div className="w-full bg-pastel-mint-100 h-2.5 rounded-full overflow-hidden border border-pastel-mint-300">
+                                <div className="w-full bg-pastel-lavender-100 h-2.5 rounded-full overflow-hidden border border-pastel-lavender-300">
                                     <div
-                                        className={`h-full transition-all duration-500 ${machine.efficiency > 90 ? 'bg-status-running-main' :
-                                            machine.efficiency > 70 ? 'bg-status-warning-main' : 'bg-status-faulty-main'
-                                            }`}
-                                        style={{ width: `${machine.efficiency}%` }}
+                                        className="h-full transition-all duration-500"
+                                        style={{ width: `${machine.efficiency}%`, backgroundColor: '#8B5CF6' }}
                                     ></div>
                                 </div>
                                 <div className="flex justify-between text-xs text-text-muted mt-3 pt-3 border-t border-pastel-lavender-100">

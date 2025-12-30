@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema({
-    productName: { type: String, required: true },
-    quantity: { type: Number, required: true },
+    customer: { type: String, required: true },
+    product: { type: String, required: true },
+    quantity: { type: String, required: true },
     deadline: { type: Date },
-    status: { type: String, default: 'pending' }, // pending, connected, completed
+    status: { type: String, default: 'pending' }, // pending, completed
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);

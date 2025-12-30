@@ -8,6 +8,7 @@ import machineRoutes from './routes/machineRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import productionRoutes from './routes/productionRoutes.js';
 import workerRoutes from './routes/workerRoutes.js';
+import metricsRoutes from './routes/metricsRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,7 @@ app.use('/api/machines', machineRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/production', productionRoutes);
 app.use('/api/workers', workerRoutes);
+app.use('/api/metrics', metricsRoutes);
 
 app.get('/', (req, res) => {
     res.send('AutoWeave Backend is running');

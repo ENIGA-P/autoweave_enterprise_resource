@@ -5,7 +5,7 @@ import ThemedInput from '../../components/common/ThemedInput';
 import { Plus, Trash2 } from 'lucide-react';
 
 const DataManagement = () => {
-    const { data, addMachine, deleteMachine, addOrder, updateDashboardMetrics } = useData();
+    const { data, addMachine, deleteMachine, addOrder, updateOrder, deleteOrder, updateDashboardMetrics } = useData();
     const [activeTab, setActiveTab] = useState('machines');
     const [formData, setFormData] = useState({});
 
@@ -35,10 +35,10 @@ const DataManagement = () => {
 
     const handleUpdateMetrics = () => {
         updateDashboardMetrics({
-            totalProduction: parseInt(formData.totalProduction) || 0,
-            activeMachines: parseInt(formData.activeMachines) || 0,
-            efficiency: parseInt(formData.efficiency) || 0,
-            pendingOrders: parseInt(formData.pendingOrders) || 0,
+            totalProduction: formData.totalProduction !== undefined ? parseInt(formData.totalProduction) : data.dashboardMetrics.totalProduction,
+            activeMachines: formData.activeMachines !== undefined ? parseInt(formData.activeMachines) : data.dashboardMetrics.activeMachines,
+            efficiency: formData.efficiency !== undefined ? parseInt(formData.efficiency) : data.dashboardMetrics.efficiency,
+            pendingOrders: formData.pendingOrders !== undefined ? parseInt(formData.pendingOrders) : data.dashboardMetrics.pendingOrders,
         });
         setFormData({});
     };
@@ -178,7 +178,7 @@ const DataManagement = () => {
                                 label="Quantity"
                                 value={formData.quantity || ''}
                                 onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                                placeholder="e.g., 5000 kg"
+                                placeholder="e.g., 5000 meters"
                             />
                             <ThemedInput
                                 label="Deadline"
@@ -205,6 +205,8 @@ const DataManagement = () => {
                                     <th className="px-6 py-3 text-left text-xs font-bold text-text-primary uppercase">Product</th>
                                     <th className="px-6 py-3 text-left text-xs font-bold text-text-primary uppercase">Quantity</th>
                                     <th className="px-6 py-3 text-left text-xs font-bold text-text-primary uppercase">Deadline</th>
+                                    <th className="px-6 py-3 text-left text-xs font-bold text-text-primary uppercase">Status</th>
+                                    <th className="px-6 py-3 text-left text-xs font-bold text-text-primary uppercase">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-pastel-lavender-100">
@@ -215,11 +217,36 @@ const DataManagement = () => {
                                         <td className="px-6 py-4 text-sm text-text-secondary">{order.product}</td>
                                         <td className="px-6 py-4 text-sm text-text-secondary">{order.quantity}</td>
                                         <td className="px-6 py-4 text-sm text-text-secondary">{order.deadline}</td>
+                                        <td className="px-6 py-4">
+                                            <select
+                                                value={order.status}
+                                                onChange={(e) => updateOrder(order.id, { status: e.target.value })}
+                                                className={`px-3 py-1 rounded-full text-xs font-bold capitalize cursor-pointer border-2 focus:outline-none transition-all ${order.status === 'completed'
+                                                    ? 'bg-status-success-light text-status-success-text border-status-success-text'
+                                                    : order.status === 'pending'
+                                                        ? 'bg-status-warning-light text-status-warning-text border-status-warning-text'
+                                                        : 'bg-status-info-light text-status-info-text border-status-info-text'
+                                                    }`}
+                                            >
+                                                <option value="pending">Pending</option>
+                                                <option value="in production">In Production</option>
+                                                <option value="completed">Completed</option>
+                                            </select>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() => deleteOrder(order.id)}
+                                                className="text-status-faulty-text hover:text-status-faulty-dark p-2 hover:bg-status-faulty-light rounded-lg transition-all"
+                                                title="Delete Order"
+                                            >
+                                                <Trash2 className="w-4 h-4" strokeWidth={2.5} />
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                                 {data.orders.length === 0 && (
                                     <tr>
-                                        <td colSpan="5" className="px-6 py-8 text-center text-text-muted">
+                                        <td colSpan="7" className="px-6 py-8 text-center text-text-muted">
                                             No orders added yet. Add your first order above.
                                         </td>
                                     </tr>

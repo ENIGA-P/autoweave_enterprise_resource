@@ -32,15 +32,17 @@ export const DataProvider = ({ children }) => {
 
     const fetchData = async () => {
         try {
-            const [machinesRes, ordersRes, productionRes] = await Promise.all([
+            const [machinesRes, ordersRes, productionRes, metricsRes] = await Promise.all([
                 fetch(`${API_URL}/machines`),
                 fetch(`${API_URL}/orders`),
-                fetch(`${API_URL}/production`)
+                fetch(`${API_URL}/production`),
+                fetch(`${API_URL}/metrics`)
             ]);
 
             const machines = await machinesRes.json();
             const orders = await ordersRes.json();
             const production = await productionRes.json();
+            const metrics = await metricsRes.json();
 
             // Map _id to id for frontend compatibility
             const formatData = (items) => items.map(item => ({ ...item, id: item._id }));
@@ -51,13 +53,12 @@ export const DataProvider = ({ children }) => {
                 orders: formatData(orders),
                 production: formatData(production),
                 // Recalculate metrics based on fetched data
+                // Use fetched metrics
                 dashboardMetrics: {
-                    totalProduction: production.reduce((acc, curr) => acc + (curr.output || 0), 0),
-                    activeMachines: machines.filter(m => m.status === 'running').length,
-                    efficiency: machines.length > 0
-                        ? Math.round(machines.reduce((acc, curr) => acc + (curr.efficiency || 0), 0) / machines.length)
-                        : 0,
-                    pendingOrders: orders.filter(o => o.status === 'pending').length,
+                    totalProduction: metrics.totalProduction || 0,
+                    activeMachines: metrics.activeMachines || 0,
+                    efficiency: metrics.efficiency || 0,
+                    pendingOrders: metrics.pendingOrders || 0,
                 }
             }));
         } catch (error) {
@@ -177,9 +178,18 @@ export const DataProvider = ({ children }) => {
         }
     };
 
-    const updateDashboardMetrics = (metrics) => {
-        // Metrics are now largely computed from DB data, but if there are manual overrides:
-        setData(prev => ({ ...prev, dashboardMetrics: { ...prev.dashboardMetrics, ...metrics } }));
+    const updateDashboardMetrics = async (metrics) => {
+        try {
+            const res = await fetch(`${API_URL}/metrics`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(metrics)
+            });
+            const updatedMetrics = await res.json();
+            setData(prev => ({ ...prev, dashboardMetrics: updatedMetrics }));
+        } catch (error) {
+            console.error("Error updating metrics", error);
+        }
     };
 
     const value = {

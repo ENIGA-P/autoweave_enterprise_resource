@@ -5,6 +5,44 @@ import crypto from 'crypto';
 
 const router = express.Router();
 
+// Get worker statistics (Must be before /:id routes)
+router.get('/stats', async (req, res) => {
+    try {
+        const { timeRange } = req.query;
+        const now = new Date();
+        let startDate = new Date();
+
+        if (timeRange === 'week') {
+            startDate.setDate(now.getDate() - 7);
+        } else if (timeRange === 'month') {
+            startDate.setMonth(now.getMonth() - 1);
+        } else if (timeRange === 'year') {
+            startDate.setFullYear(now.getFullYear() - 1);
+        } else {
+            // Default to all time or maybe month? Let's default to month if unspecified
+            startDate.setMonth(now.getMonth() - 1);
+        }
+
+        const workers = await Worker.find();
+
+        const stats = workers.map(worker => {
+            const filteredShifts = worker.shifts.filter(shift => {
+                const shiftDate = new Date(shift.date);
+                return shiftDate >= startDate && shiftDate <= now;
+            });
+
+            return {
+                name: worker.name,
+                value: filteredShifts.length
+            };
+        }).filter(item => item.value > 0); // Only return workers with shifts
+
+        res.json(stats);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Get all workers
 router.get('/', async (req, res) => {
     try {
@@ -120,9 +158,9 @@ router.post('/:id/create-order', async (req, res) => {
         }
 
         const options = {
-            amount: totalAmount * 100, // Amount in paise
+            amount: Math.round(totalAmount * 100), // Amount in paise, must be an integer
             currency: 'INR',
-            receipt: `receipt_worker_${id}_${Date.now()}`,
+            receipt: `rcpt_${id.slice(-6)}_${Date.now()}`, // Shortened to fit 40 char limit
             notes: {
                 worker_id: id,
                 worker_name: worker.name
@@ -133,8 +171,17 @@ router.post('/:id/create-order', async (req, res) => {
         res.json(order);
 
     } catch (error) {
-        console.error("Error creating order:", error);
-        res.status(500).json({ message: error.message });
+        console.error("Error creating order:", {
+            message: error.message,
+            statusCode: error.statusCode,
+            error: error.error,
+            description: error.description,
+            fullError: error
+        });
+        res.status(500).json({
+            message: error.message || 'Failed to create order',
+            details: error.description || error.error?.description
+        });
     }
 });
 

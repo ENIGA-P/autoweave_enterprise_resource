@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Activity, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import DataCard from '../../components/common/DataCard';
 import StatusIndicator from '../../components/common/StatusIndicator';
+import ShiftDistributionChart from './ShiftDistributionChart';
 
 const Dashboard = () => {
     const { data } = useData();
@@ -55,7 +56,7 @@ const Dashboard = () => {
                 >
                     <div className="w-full bg-pastel-blue-100 h-2.5 rounded-full mt-3 overflow-hidden border border-pastel-blue-300">
                         <div
-                            className="bg-pastel-blue-600 h-full transition-all duration-500"
+                            className="bg-gradient-to-r from-violet-600 to-purple-500 h-full transition-all duration-500"
                             style={{ width: `${dashboardMetrics.efficiency}%` }}
                         ></div>
                     </div>
@@ -127,6 +128,9 @@ const Dashboard = () => {
                         </ResponsiveContainer>
                     </div>
                 </div>
+
+                {/* Worker Shift Distribution Chart */}
+                <ShiftDistributionChart />
             </div>
 
             {machines.length === 0 && (
