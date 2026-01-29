@@ -1,0 +1,24 @@
+graph LR
+    %% Actors
+    Admin[Administrator]
+
+    %% Styles
+    classDef actor fill:#ffffff,stroke:#000000,stroke-width:2px;
+    classDef usecase fill:#ffffff,stroke:#000000,stroke-width:1px,rx:5,ry:5;
+    class Admin actor;
+    class UC15,UC16,UC17,UC18 usecase;
+
+    %% Diagram
+    subgraph OrderMgmt [Order Management]
+        direction TB
+         style OrderMgmt fill:#ffffff,stroke:#000000,stroke-width:2px
+        UC15([View Orders])
+        UC16([Create New Order])
+        UC17([Update Order Status])
+        UC18([Delete Order])
+    end
+
+    Admin --> UC15
+    Admin --> UC16
+    Admin --> UC17
+    Admin --> UC18

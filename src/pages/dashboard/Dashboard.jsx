@@ -5,21 +5,37 @@ import { Activity, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import DataCard from '../../components/common/DataCard';
 import StatusIndicator from '../../components/common/StatusIndicator';
 import ShiftDistributionChart from './ShiftDistributionChart';
+import MachineStatusCard from './MachineStatusCard';
 
 const Dashboard = () => {
     const { data } = useData();
-    const { dashboardMetrics, machines } = data;
+    const { dashboardMetrics, machines, production } = data;
 
     const runningMachines = machines.filter(m => m.status === 'running').length;
 
-    const productionData = [
-        { time: '08:00', output: 400 },
-        { time: '10:00', output: 300 },
-        { time: '12:00', output: 550 },
-        { time: '14:00', output: 450 },
-        { time: '16:00', output: 600 },
-        { time: '18:00', output: 500 },
-    ];
+    // Aggregate production data for the charts
+    // Group by time or take last 10 entries for the trend
+    const getChartData = () => {
+        if (!production || production.length === 0) {
+            return [
+                { time: '08:00', output: 0 },
+                { time: '10:00', output: 0 },
+                { time: '12:00', output: 0 },
+                { time: '14:00', output: 0 },
+                { time: '16:00', output: 0 },
+                { time: '18:00', output: 0 },
+            ];
+        }
+
+        const sortedProduction = [...production].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        return sortedProduction.slice(-10).map(p => ({
+            time: new Date(p.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            output: p.output
+        }));
+    };
+
+    const productionData = getChartData();
 
     return (
         <div className="space-y-6">
@@ -104,26 +120,75 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl p-6 shadow-soft">
-                    <h3 className="text-lg font-bold text-white mb-4">Machine Utilization</h3>
-                    <div className="h-80">
+                <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl p-6 shadow-soft relative overflow-hidden">
+                    {/* Animated background pattern */}
+                    <div className="absolute inset-0 opacity-10">
+                        <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
+                        <div className="absolute bottom-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                    </div>
+
+                    <h3 className="text-lg font-bold text-white mb-4 relative z-10">Machine Utilization</h3>
+                    <div className="h-80 relative z-10">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={productionData}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
-                                <XAxis dataKey="time" stroke="#E9D5FF" style={{ fontSize: '12px', fontWeight: 500 }} tick={{ fill: '#E9D5FF' }} />
-                                <YAxis stroke="#E9D5FF" style={{ fontSize: '12px', fontWeight: 500 }} tick={{ fill: '#E9D5FF' }} />
+                                <defs>
+                                    {/* Gradient definitions for bars */}
+                                    <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#FFFFFF" stopOpacity={1} />
+                                        <stop offset="100%" stopColor="#E9D5FF" stopOpacity={0.8} />
+                                    </linearGradient>
+
+                                    {/* Pattern for bars */}
+                                    <pattern id="diagonalStripes" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+                                        <rect width="4" height="8" fill="rgba(255, 255, 255, 0.1)" />
+                                    </pattern>
+                                </defs>
+
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    stroke="rgba(255, 255, 255, 0.15)"
+                                    strokeWidth={1}
+                                />
+
+                                <XAxis
+                                    dataKey="time"
+                                    stroke="#E9D5FF"
+                                    style={{ fontSize: '12px', fontWeight: 600 }}
+                                    tick={{ fill: '#E9D5FF' }}
+                                    axisLine={{ stroke: 'rgba(255, 255, 255, 0.3)', strokeWidth: 2 }}
+                                />
+
+                                <YAxis
+                                    stroke="#E9D5FF"
+                                    style={{ fontSize: '12px', fontWeight: 600 }}
+                                    tick={{ fill: '#E9D5FF' }}
+                                    axisLine={{ stroke: 'rgba(255, 255, 255, 0.3)', strokeWidth: 2 }}
+                                />
+
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: '#fff',
+                                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
                                         borderColor: '#7E22CE',
                                         borderRadius: '12px',
-                                        borderWidth: '0px',
-                                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)'
+                                        borderWidth: '2px',
+                                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+                                        backdropFilter: 'blur(10px)'
                                     }}
-                                    cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
-                                    itemStyle={{ color: '#6B21A8', fontWeight: 600 }}
+                                    cursor={{
+                                        fill: 'rgba(255, 255, 255, 0.15)',
+                                        radius: [8, 8, 0, 0]
+                                    }}
+                                    itemStyle={{ color: '#6B21A8', fontWeight: 700 }}
+                                    labelStyle={{ color: '#7E22CE', fontWeight: 700 }}
                                 />
-                                <Bar dataKey="output" fill="#FFFFFF" radius={[8, 8, 0, 0]} />
+
+                                <Bar
+                                    dataKey="output"
+                                    fill="url(#barGradient)"
+                                    radius={[12, 12, 0, 0]}
+                                    animationDuration={1000}
+                                    animationBegin={0}
+                                />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
@@ -131,6 +196,9 @@ const Dashboard = () => {
 
                 {/* Worker Shift Distribution Chart */}
                 <ShiftDistributionChart />
+
+                {/* Live Machine Status Card */}
+                <MachineStatusCard />
             </div>
 
             {machines.length === 0 && (

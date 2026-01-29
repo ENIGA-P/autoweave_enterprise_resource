@@ -1,0 +1,26 @@
+graph LR
+    %% Actors
+    Admin[Administrator]
+
+    %% Styles
+    classDef actor fill:#ffffff,stroke:#000000,stroke-width:2px;
+    classDef usecase fill:#ffffff,stroke:#000000,stroke-width:1px,rx:5,ry:5;
+    class Admin actor;
+    class UC2,UC3,UC4,UC5,UC6 usecase;
+
+    %% Diagram
+    subgraph MachineMgmt [Machine Management]
+        direction TB
+        style MachineMgmt fill:#ffffff,stroke:#000000,stroke-width:2px
+        UC2([View Machine List])
+        UC3([Add New Machine])
+        UC4([Update Machine Details])
+        UC5([Delete Machine])
+        UC6([Update Daily Production])
+    end
+
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC5
+    Admin --> UC6

@@ -1,0 +1,51 @@
+graph TB
+    %% Entities
+    Admin[Administrator]
+    Razorpay[Razorpay Gateway]
+
+    %% Processes
+    P1((1.0 Auth))
+    P2((2.0 Machines))
+    P3((3.0 Payroll))
+    P4((4.0 Orders))
+    
+    %% Data Stores
+    D1[("D1 Users")]
+    D2[("D2 Machines")]
+    D3[("D3 Workers")]
+    D4[("D4 Orders")]
+
+    %% Styles
+    classDef entity fill:#ffffff,stroke:#000000,stroke-width:2px;
+    classDef process fill:#ffffff,stroke:#000000,stroke-width:2px,rx:10,ry:10;
+    classDef store fill:#ffffff,stroke:#000000,stroke-width:2px,shape:cylinder;
+
+    class Admin,Razorpay entity;
+    class P1,P2,P3,P4 process;
+    class D1,D2,D3,D4 store;
+
+    %% 1.0 Authentication
+    Admin -- "Credentials" --> P1
+    P1 -- "Verify" --> D1
+    D1 -- "User Data" --> P1
+    P1 -- "Token" --> Admin
+
+    %% 2.0 Machine Management
+    Admin -- "Machine Input" --> P2
+    P2 -- "Save" --> D2
+    D2 -- "Data" --> P2
+    P2 -- "Reports" --> Admin
+
+    %% 3.0 Worker & Payroll
+    Admin -- "Worker Data" --> P3
+    P3 -- "Store" --> D3
+    D3 -- "History" --> P3
+    P3 -- "Pay Request" --> Razorpay
+    Razorpay -- "Status" --> P3
+    P3 -- "Salary Report" --> Admin
+
+    %% 4.0 Order Management
+    Admin -- "Order Details" --> P4
+    P4 -- "Save" --> D4
+    D4 -- "History" --> P4
+    P4 -- "List" --> Admin

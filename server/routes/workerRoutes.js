@@ -82,12 +82,16 @@ router.post('/:id/shifts', async (req, res) => {
 
         // Add shift with default rate if not specified, or use worker's rate
         // The requirement says "salary per shifts corsts for rs 750", assuming this is the stored amount
-        const shiftAmount = worker.shiftRate;
+        // shiftAmount is calculated below based on hours
 
         // Use provided date or default to now
         const shiftDate = date ? new Date(date) : new Date();
         // Use provided hours or default to 8
         const shiftHours = hours ? Number(hours) : 8;
+
+        // Calculate amount based on hours (pro-rated from 8-hour shift rate)
+        const hourlyRate = worker.shiftRate / 8;
+        const shiftAmount = Math.round(hourlyRate * shiftHours);
 
         worker.shifts.push({
             amount: shiftAmount,

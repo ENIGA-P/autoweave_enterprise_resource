@@ -1,0 +1,26 @@
+graph LR
+    %% Entities
+    Admin[Administrator]
+    Razorpay[Razorpay Gateway]
+    
+    %% System Process
+    System((AutoWeave ERP System))
+
+    %% Styles
+    classDef entity fill:#ffffff,stroke:#000000,stroke-width:2px;
+    classDef process fill:#ffffff,stroke:#000000,stroke-width:2px,rx:10,ry:10;
+    
+    class Admin,Razorpay entity;
+    class System process;
+
+    %% Flows
+    Admin -- "Login Credentials" --> System
+    Admin -- "Machine Updates" --> System
+    Admin -- "Worker Details" --> System
+    Admin -- "Order Info" --> System
+    
+    System -- "Production Reports" --> Admin
+    System -- "Salary Status" --> Admin
+    
+    System -- "Payment Request" --> Razorpay
+    Razorpay -- "Confirmation" --> System

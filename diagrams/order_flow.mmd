@@ -1,0 +1,26 @@
+flowchart TD
+    A[Start] --> B["Data Management Page"]
+    B --> C{"Action?"}
+    
+    C -- Add Order --> D["Fill Order Form"]
+    D --> E["Select Product & Customer"]
+    E --> F["Enter Quantity & Deadline"]
+    F --> G["Submit"]
+    G --> H["API: POST /api/orders"]
+    H --> I["DB: Create Order (Status: Pending)"]
+    I --> J["Update Order List UI"]
+
+    C -- Update Status --> K["Select Order"]
+    K --> L["Change Status"]
+    L --> M{"New Status"}
+    M -- In Production --> N["API: PUT /api/orders/:id"]
+    M -- Completed --> O["API: PUT /api/orders/:id"]
+    N --> P["DB: Update Status"]
+    O --> P
+    P --> J
+
+    C -- Delete Order --> Q["Click Delete"]
+    Q --> R["Confirm"]
+    R --> S["API: DELETE /api/orders/:id"]
+    S --> T["DB: Remove Document"]
+    T --> J

@@ -1,0 +1,87 @@
+erDiagram
+    %% Entities
+    MACHINE {
+        ObjectId _id PK
+        String name
+        String status
+        Number efficiency
+        String lastMaintenance
+        String uptime
+        Number temperature
+        Number powerConsumption
+        String currentOrder
+        Number totalTargetMeters
+        Number completedMeters
+        Number dailyMeters
+        Date createdAt
+        Date updatedAt
+    }
+
+    PRODUCTION {
+        ObjectId _id PK
+        String machineId FK
+        Number output
+        Number defects
+        Date date
+        Date createdAt
+        Date updatedAt
+    }
+
+    ORDER {
+        ObjectId _id PK
+        String customer
+        String product
+        String quantity
+        Date deadline
+        String status
+        Date createdAt
+        Date updatedAt
+    }
+
+    WORKER {
+        ObjectId _id PK
+        String name
+        String contact
+        Number shiftRate
+        Date createdAt
+        Date updatedAt
+    }
+
+    SHIFT {
+        ObjectId _id PK
+        Date date
+        Number amount
+        Number hours
+        Boolean isPaid
+    }
+
+    PAYMENT {
+        ObjectId _id PK
+        Number amount
+        Date date
+    }
+
+    METRICS {
+        ObjectId _id PK
+        Number totalProduction
+        Number activeMachines
+        Number efficiency
+        Number pendingOrders
+        Date createdAt
+        Date updatedAt
+    }
+
+    %% Relationships
+    
+    %% Machine generates various Production logs
+    MACHINE ||--o{ PRODUCTION : "generates"
+    
+    %% Worker has many Shifts (Embedded)
+    WORKER ||--o{ SHIFT : "has (embedded)"
+    
+    %% Worker has many Payments (Embedded)
+    WORKER ||--o{ PAYMENT : "receives (embedded)"
+
+    %% Machine works on an Order (Logic Link via currentOrder string)
+    %% Note: Schema uses 'currentOrder' string, not direct ObjectId, but logical link exists.
+    MACHINE }|--o| ORDER : "works on (logical)"

@@ -1,0 +1,38 @@
+sequenceDiagram
+    participant Admin
+    participant FE as Frontend (Payroll/Worker)
+    participant API as API (workerRoutes.js)
+    participant DB as MongoDB (Worker)
+    participant RP as Razorpay
+
+    %% Worker Registration
+    Admin->>FE: Add New Worker
+    FE->>API: POST /api/workers
+    API->>DB: Create Worker Document
+    DB-->>API: Worker Created
+    API-->>FE: Success
+
+    %% Shift Entry
+    Admin->>FE: Add Shift (Date, Hours)
+    FE->>API: POST /api/workers/:id/shifts
+    API->>DB: Push to shifts array (isPaid: false)
+    DB-->>API: Updated Worker
+    API-->>FE: Success
+
+    %% Payment Process
+    Admin->>FE: Click "Pay Salary"
+    FE->>API: POST /api/workers/:id/create-order
+    API->>DB: Calculate Unpaid Total
+    API->>RP: Create Order
+    RP-->>API: Order ID
+    API-->>FE: Razorpay Options
+    FE->>Admin: Open Payment Modal
+    Admin->>RP: Complete Payment
+    RP-->>FE: Payment Success (Signature)
+    FE->>API: POST /api/workers/:id/verify-payment
+    API->>API: Verify Signature (HMAC)
+    API->>DB: Mark Shifts as Paid (isPaid: true)
+    API->>DB: Record Payment Transaction
+    DB-->>API: Success
+    API-->>FE: Payment Verified
+    FE->>Admin: Update UI (Due Salary: 0)

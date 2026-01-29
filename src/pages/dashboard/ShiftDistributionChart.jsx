@@ -27,7 +27,12 @@ const ShiftDistributionChart = () => {
         try {
             setLoading(true);
             const response = await axios.get(`http://localhost:5000/api/workers/stats?timeRange=${timeRange}`);
-            setStats(response.data);
+            if (Array.isArray(response.data)) {
+                setStats(response.data);
+            } else {
+                console.error("Expected array from API but got:", response.data);
+                setStats([]);
+            }
         } catch (error) {
             console.error("Error fetching stats:", error);
         } finally {
@@ -59,7 +64,7 @@ const ShiftDistributionChart = () => {
                 </div>
             </div>
 
-            <div className="h-80 w-full relative">
+            <div className="h-80 w-full relative flex gap-6">
                 {loading ? (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
@@ -69,54 +74,93 @@ const ShiftDistributionChart = () => {
                         No shifts data for this period
                     </div>
                 ) : (
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                            <Pie
-                                data={stats}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={60}
-                                outerRadius={80}
-                                paddingAngle={5}
-                                dataKey="value"
-                                onMouseEnter={onPieEnter}
-                                stroke="none"
-                            >
-                                {stats.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={COLORS[index % COLORS.length]}
-                                        stroke={activeIndex === index ? '#fff' : 'none'}
-                                        strokeWidth={activeIndex === index ? 2 : 0}
-                                        style={{
-                                            filter: activeIndex === index ? 'drop-shadow(0px 0px 8px rgba(255,255,255,0.4))' : 'none',
-                                            transition: 'all 0.3s ease'
+                    <>
+                        {/* Chart Section */}
+                        <div className="flex-1">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={stats}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                        onMouseEnter={onPieEnter}
+                                        stroke="none"
+                                    >
+                                        {stats.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={COLORS[index % COLORS.length]}
+                                                stroke={activeIndex === index ? '#fff' : 'none'}
+                                                strokeWidth={activeIndex === index ? 2 : 0}
+                                                style={{
+                                                    filter: activeIndex === index ? 'drop-shadow(0px 0px 8px rgba(255,255,255,0.4))' : 'none',
+                                                    transition: 'all 0.3s ease'
+                                                }}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                            borderColor: 'none',
+                                            borderRadius: '12px',
+                                            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                                            color: '#1f2937',
+                                            padding: '12px'
                                         }}
+                                        itemStyle={{ color: '#4B5563', fontWeight: 'bold' }}
+                                        formatter={(value, name) => [`${value} shifts`, name]}
                                     />
-                                ))}
-                            </Pie>
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                                    borderColor: 'none',
-                                    borderRadius: '12px',
-                                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                                    color: '#1f2937',
-                                    padding: '12px'
-                                }}
-                                itemStyle={{ color: '#4B5563', fontWeight: 'bold' }}
-                                formatter={(value, name) => [`${value} shifts`, name]}
-                            />
-                            <Legend
-                                iconType="circle"
-                                layout="horizontal"
-                                verticalAlign="bottom"
-                                align="center"
-                                wrapperStyle={{ paddingTop: '20px' }}
-                                formatter={(value) => <span className="text-white font-medium ml-1">{value}</span>}
-                            />
-                        </PieChart>
-                    </ResponsiveContainer>
+                                    <Legend
+                                        iconType="circle"
+                                        layout="horizontal"
+                                        verticalAlign="bottom"
+                                        align="center"
+                                        wrapperStyle={{ paddingTop: '20px' }}
+                                        formatter={(value) => <span className="text-white font-medium ml-1">{value}</span>}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        {/* Performance Stats Section */}
+                        <div className="w-48 flex flex-col justify-center space-y-4">
+                            {(() => {
+                                const totalShifts = stats.reduce((sum, worker) => sum + worker.value, 0);
+                                const avgShifts = totalShifts / stats.length;
+                                const highPerformers = stats.filter(w => w.value > avgShifts).length;
+                                const lowPerformers = stats.filter(w => w.value < avgShifts).length;
+                                const highPercentage = ((highPerformers / stats.length) * 100).toFixed(0);
+                                const lowPercentage = ((lowPerformers / stats.length) * 100).toFixed(0);
+
+                                return (
+                                    <>
+                                        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                                            <div className="text-xs text-purple-200 mb-1">High Performers</div>
+                                            <div className="text-3xl font-bold text-white">{highPercentage}%</div>
+                                            <div className="text-xs text-purple-200 mt-1">Above average shifts</div>
+                                        </div>
+
+                                        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                                            <div className="text-xs text-purple-200 mb-1">Low Performers</div>
+                                            <div className="text-3xl font-bold text-white">{lowPercentage}%</div>
+                                            <div className="text-xs text-purple-200 mt-1">Below average shifts</div>
+                                        </div>
+
+                                        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                                            <div className="text-xs text-purple-200 mb-1">Average Shifts</div>
+                                            <div className="text-2xl font-bold text-white">{avgShifts.toFixed(1)}</div>
+                                            <div className="text-xs text-purple-200 mt-1">Per worker</div>
+                                        </div>
+                                    </>
+                                );
+                            })()}
+                        </div>
+                    </>
                 )}
             </div>
         </div>

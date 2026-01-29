@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant User as Production Supervisor
+    participant FE as Frontend (ProductionEntry.jsx)
+    participant API as API (productionRoutes.js)
+    participant DB as MongoDB (Machine/Production)
+
+    User->>FE: Select Machine & Date
+    User->>FE: Enter Meter Reading (Current)
+    FE->>FE: Calculate Production (Current - Previous)
+    User->>FE: Click "Update"
+    FE->>API: POST /api/production/update
+    API->>DB: Find Machine
+    API->>DB: Save DailyProduction Record
+    API->>DB: Update Machine (totalProduction, avgEfficiency)
+    DB-->>API: Success
+    API-->>FE: 200 OK (Updated Data)
+    FE->>User: Show Success Message
+    FE->>FE: Update Efficiency Bar & Status
