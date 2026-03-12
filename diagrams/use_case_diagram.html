@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoWeave ERP - Use Case Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .diagram-container {
+            text-align: center;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .legend h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .actor-box {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background-color: #e7f3ff;
+            font-weight: bold;
+        }
+        .usecase-box {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 3px;
+            border: 1px solid #28a745;
+            border-radius: 3px;
+            background-color: #e8f5e8;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AutoWeave ERP - Use Case Diagram</h1>
+            <p>Comprehensive Textile Manufacturing Management System</p>
+        </div>
+        
+        <div class="diagram-container">
+            <div class="mermaid">
+                graph TD
+                    subgraph "AutoWeave ERP System"
+                        subgraph "Authentication Module"
+                            UC01[UC-01: Login]
+                            UC02[UC-02: Logout]
+                            UC03[UC-03: Reset Password]
+                        end
+                        
+                        subgraph "Dashboard Module"
+                            UC04[UC-04: View Dashboard]
+                            UC05[UC-05: View Analytics]
+                            UC06[UC-06: View Reports Summary]
+                        end
+                        
+                        subgraph "Machine Management"
+                            UC07[UC-07: Register Machine]
+                            UC08[UC-08: Update Machine Status]
+                            UC09[UC-09: Monitor Machine Performance]
+                            UC10[UC-10: Schedule Maintenance]
+                            UC11[UC-11: View Machine History]
+                        end
+                        
+                        subgraph "Order Management"
+                            UC12[UC-12: Create Order]
+                            UC13[UC-13: Update Order Status]
+                            UC14[UC-14: View Order List]
+                            UC15[UC-15: Assign Order to Production]
+                            UC16[UC-16: Track Order Fulfillment]
+                        end
+                        
+                        subgraph "Production Management"
+                            UC17[UC-17: Record Production Data]
+                            UC18[UC-18: Monitor Production Targets]
+                            UC19[UC-19: Manage Shifts]
+                            UC20[UC-20: Track Quality Metrics]
+                            UC21[UC-21: Generate Production Reports]
+                        end
+                        
+                        subgraph "Worker Management"
+                            UC22[UC-22: Register Worker]
+                            UC23[UC-23: Manage Attendance]
+                            UC24[UC-24: Assign Shifts]
+                            UC25[UC-25: Track Performance]
+                            UC26[UC-26: Update Worker Profile]
+                        end
+                        
+                        subgraph "Payroll Module"
+                            UC27[UC-27: Calculate Salary]
+                            UC28[UC-28: Generate Payslips]
+                            UC29[UC-29: Process Payments]
+                            UC30[UC-30: Manage Payment History]
+                        end
+                        
+                        subgraph "Reports Module"
+                            UC31[UC-31: Generate Production Reports]
+                            UC32[UC-32: Generate Financial Reports]
+                            UC33[UC-33: Generate Worker Reports]
+                            UC34[UC-34: Generate Machine Reports]
+                            UC35[UC-35: Schedule Reports]
+                        end
+                        
+                        subgraph "Settings Module"
+                            UC36[UC-36: Manage User Accounts]
+                            UC37[UC-37: Configure System Settings]
+                            UC38[UC-38: Manage Permissions]
+                            UC39[UC-39: Backup Data]
+                            UC40[UC-40: Configure Notifications]
+                        end
+                    end
+                    
+                    %% Actors
+                    Admin[👨‍💼 Admin]
+                    Manager[👔 Manager]
+                    Supervisor[👷‍♂️ Supervisor]
+                    Worker[👷 Worker]
+                    Customer[🧑‍💼 Customer]
+                    
+                    %% External Systems
+                    Razorpay[💳 Razorpay Payment Gateway]
+                    EmailService[📧 Email Service]
+                    
+                    %% Actor Connections
+                    Admin --> UC01
+                    Admin --> UC07
+                    Admin --> UC22
+                    Admin --> UC27
+                    Admin --> UC31
+                    Admin --> UC36
+                    
+                    Manager --> UC01
+                    Manager --> UC04
+                    Manager --> UC07
+                    Manager --> UC12
+                    Manager --> UC17
+                    Manager --> UC22
+                    Manager --> UC27
+                    Manager --> UC31
+                    
+                    Supervisor --> UC01
+                    Supervisor --> UC04
+                    Supervisor --> UC08
+                    Supervisor --> UC09
+                    Supervisor --> UC17
+                    Supervisor --> UC19
+                    Supervisor --> UC23
+                    Supervisor --> UC31
+                    
+                    Worker --> UC01
+                    Worker --> UC04
+                    Worker --> UC26
+                    
+                    Customer --> UC12
+                    Customer --> UC16
+                    
+                    %% External System Connections
+                    UC29 -.-> Razorpay
+                    UC40 -.-> EmailService
+                    
+                    %% Include relationships (solid lines)
+                    UC04 --> UC05
+                    UC13 --> UC17
+                    UC27 --> UC24
+                    UC31 --> UC17
+                    
+                    %% Extend relationships (dashed lines)
+                    UC03 -.-> UC01
+                    UC10 -.-> UC08
+                    UC35 -.-> UC31
+                    
+                    %% Styling
+                    classDef actor fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+                    classDef usecase fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px
+                    classDef external fill:#fff3e0,stroke:#e65100,stroke-width:2px
+                    classDef module fill:#f3e5f5,stroke:#6a1b9a,stroke-width:1px
+                    
+                    class Admin,Manager,Supervisor,Worker,Customer actor
+                    class UC01,UC02,UC03,UC04,UC05,UC06,UC07,UC08,UC09,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36,UC37,UC38,UC39,UC40 usecase
+                    class Razorpay,EmailService external
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>Legend</h3>
+            <div>
+                <strong>Actors:</strong>
+                <div class="actor-box">Admin</div>
+                <div class="actor-box">Manager</div>
+                <div class="actor-box">Supervisor</div>
+                <div class="actor-box">Worker</div>
+                <div class="actor-box">Customer</div>
+            </div>
+            <br>
+            <div>
+                <strong>Relationships:</strong><br>
+                → Solid line: Direct association<br>
+                -.-> Dashed line: Extend relationship<br>
+                → Include relationship (use case includes another)
+            </div>
+            <br>
+            <div>
+                <strong>Total Use Cases:</strong> 40 across 8 modules<br>
+                <strong>Primary Actors:</strong> 5 (Admin, Manager, Supervisor, Worker, Customer)<br>
+                <strong>External Systems:</strong> Razorpay Payment Gateway, Email Service
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# AutoWeave ERP: Comprehensive Textile Manufacturing Management System
+
+**Abstract**
+
+AutoWeave is a robust Enterprise Resource Planning (ERP) solution specifically engineered for the textile manufacturing industry. It serves as a centralized platform to streamline complex operations, ranging from raw material handling to final product dispatch. By integrating modern web technologies, AutoWeave aims to replace traditional, fragmented management methods with a cohesive, digital ecosystem that enhances operational visibility and decision-making for textile unit owners and managers.
+
+At the heart of the system lies a powerful production and asset management module. The application provides real-time tracking of loom performance and machine efficiency through dedicated machine and production tracking interfaces. It allows supervisors to monitor active shifts, track daily output against targets, and identify maintenance needs proactively. The system's granular approach ensures that every meter of fabric produced is accounted for, minimizing wastage and optimizing resource utilization across the factory floor.
+
+Facilitating seamless workforce management, AutoWeave includes a comprehensive worker module that handles attendance, shift scheduling, and performance metrics. It simplifies the often chaotic process of labor allocation, ensuring that skilled workers are optimally distributed across shifts. Concurrently, the Order Management system tracks customer orders from inception to fulfillment. By linking production data directly with order requirements, the system provides accurate delivery estimates and ensures that manufacturing priorities align with client deadlines.
+
+To support the financial backbone of the business, the platform integrates Payroll processing and secure payment gateways like Razorpay. This ensures timely and accurate compensation for workers and streamlined transaction processing for business engagements. Complementing this is a sophisticated Reporting module capable of generating detailed PDF and Excel reports. These analytics provide stakeholders with critical insights into daily production trends, defect rates, and overall plant efficiency, empowering data-driven strategic planning.
+
+Designed with usability in mind, AutoWeave features a responsive React-based interface equipped with a dark mode for reduced eye strain during night shifts and multi-language support (including Tamil) to accommodate a diverse workforce. The application ensures data security and role-based access control, making it a secure, accessible, and user-friendly tool for modernization of textile manufacturing operations.

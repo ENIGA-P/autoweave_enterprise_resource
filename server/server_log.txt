@@ -1,0 +1,8 @@
+[2026-02-09T04:43:49.447Z] Server running on port 5000
+[2026-02-09T04:43:53.999Z] [WorkerRoutes] POST / (Create Worker) request received
+[2026-02-09T04:43:54.001Z] [WorkerRoutes] Creating worker: John Doe
+[2026-02-09T04:43:54.017Z] [WorkerRoutes] Saving new worker...
+[2026-02-09T04:44:04.042Z] [WorkerRoutes] Error creating worker: Operation `workers.insertOne()` buffering timed out after 10000ms
+[2026-02-09T04:44:19.683Z] MongoDB connection error: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/
+[2026-02-09T04:48:59.691Z] Server running on port 5000
+[2026-02-09T04:48:59.779Z] Connected to MongoDB

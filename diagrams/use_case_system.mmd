@@ -1,0 +1,68 @@
+graph LR
+    %% Actors
+    Admin[Administrator]
+    Worker[Operator/Worker]
+
+    %% Styles
+    classDef actor fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef usecase fill:#fff,stroke:#333,stroke-width:1px,rx:10,ry:10;
+    class Admin,Worker actor;
+
+    %% Subsystems
+    subgraph MachineMgmt [Machine Management]
+        direction TB
+        UC1([Monitor Real-time Status])
+        UC2([Configure Machine Paramaters])
+        UC3([Schedule Maintenance])
+    end
+
+    subgraph ProductionMgmt [Production Monitoring]
+        direction TB
+        UC4([View Live Efficiency])
+        UC5([Log Defect Data])
+        UC6([Track Production Counts])
+    end
+
+    subgraph OrderMgmt [Order Management]
+        direction TB
+        UC7([Create New Order])
+        UC8([Update Order Status])
+        UC9([Track Order Progress])
+    end
+
+    subgraph WorkerMgmt [Worker Management]
+        direction TB
+        UC10([Assign Shifts])
+        UC11([View Worker Performance])
+    end
+
+    subgraph Reporting [Reporting & Analytics]
+        direction TB
+        UC12([Generate PDF/Excel Reports])
+        UC13([View Dashboard Overview])
+        UC14([Analyze Historic Trends])
+    end
+
+    %% Relationships - Admin
+    Admin --> UC1
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC6
+    Admin --> UC7
+    Admin --> UC8
+    Admin --> UC9
+    Admin --> UC10
+    Admin --> UC11
+    Admin --> UC12
+    Admin --> UC13
+    Admin --> UC14
+
+    %% Relationships - Worker
+    Worker --> UC1
+    Worker --> UC5
+    Worker --> UC6
+    Worker --> UC9
+
+    %% Styling Application
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14 usecase;

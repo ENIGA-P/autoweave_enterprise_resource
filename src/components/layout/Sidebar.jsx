@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Settings, ShoppingCart, Activity, FileText, LogOut, Database, Users } from 'lucide-react';
+import { LayoutDashboard, Settings, ShoppingCart, Activity, FileText, LogOut, Database, Users, Camera } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { clsx } from 'clsx';
@@ -17,6 +17,7 @@ const Sidebar = () => {
         { path: '/reports', label: t('nav.reports'), icon: FileText },
         { path: '/data-management', label: t('nav.dataManagement'), icon: Database },
         { path: '/workers', label: t('nav.workers'), icon: Users },
+        { path: '/workers/kiosk', label: 'Face Attendance', icon: Camera },
         { path: '/payroll', label: t('nav.payroll'), icon: FileText },
     ];
 

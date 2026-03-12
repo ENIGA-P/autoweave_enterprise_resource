@@ -162,7 +162,7 @@ const Reports = () => {
                             </div>
                         </div>
 
-                        <div>
+                        <div className="mb-6">
                             <label className="block text-sm font-semibold text-text-primary mb-3">Format</label>
                             <div className="flex gap-6">
                                 <label className="flex items-center gap-2 text-text-primary font-medium cursor-pointer group">
@@ -195,7 +195,7 @@ const Reports = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-pastel-mint-500 hover:bg-pastel-mint-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-pastel-mint-500 hover:bg-pastel-mint-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
                         >
                             {loading ? (
                                 <>

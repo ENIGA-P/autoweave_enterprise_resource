@@ -69,6 +69,26 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Save face descriptor for a worker
+router.post('/:id/face', async (req, res) => {
+    const { id } = req.params;
+    const { faceDescriptor } = req.body;
+
+    try {
+        const worker = await Worker.findById(id);
+        if (!worker) {
+            return res.status(404).json({ message: 'Worker not found' });
+        }
+
+        worker.faceDescriptor = faceDescriptor;
+        await worker.save();
+
+        res.status(200).json({ message: 'Face registered successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Add a shift to a worker
 router.post('/:id/shifts', async (req, res) => {
     const { id } = req.params;

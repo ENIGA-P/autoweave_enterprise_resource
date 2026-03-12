@@ -16,6 +16,7 @@ const workerSchema = new mongoose.Schema({
     name: { type: String, required: true },
     contact: { type: String, required: true },
     shiftRate: { type: Number, default: 750 },
+    faceDescriptor: { type: [Number], default: null },
     shifts: [shiftSchema],
     payments: [paymentSchema]
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });

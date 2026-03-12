@@ -17,6 +17,7 @@ import Reports from './pages/reports/Reports';
 import DataManagement from './pages/settings/DataManagement';
 import WorkerList from './pages/workers/WorkerList';
 import WorkerForm from './pages/workers/WorkerForm';
+import FaceAttendance from './pages/workers/FaceAttendance';
 import Payroll from './pages/payroll/Payroll';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
 
                                 <Route path="/workers" element={<ProtectedRoute><MainLayout><WorkerList /></MainLayout></ProtectedRoute>} />
                                 <Route path="/workers/new" element={<ProtectedRoute><MainLayout><WorkerForm /></MainLayout></ProtectedRoute>} />
+                                <Route path="/workers/kiosk" element={<ProtectedRoute><FaceAttendance /></ProtectedRoute>} />
                                 <Route path="/payroll" element={<ProtectedRoute><MainLayout><Payroll /></MainLayout></ProtectedRoute>} />
 
                                 <Route path="*" element={<Navigate to="/" replace />} />

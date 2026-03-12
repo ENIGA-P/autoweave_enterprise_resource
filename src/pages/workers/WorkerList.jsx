@@ -4,6 +4,7 @@ import workerService from '../../services/workerService';
 import { useLanguage } from '../../context/LanguageContext';
 
 import AttendanceSheet from './AttendanceSheet';
+import FaceRegistrationModal from '../../components/FaceRegistrationModal';
 
 const WorkerList = () => {
     const { t } = useLanguage();
@@ -14,6 +15,8 @@ const WorkerList = () => {
 
     // Modal State
     const [isShiftModalOpen, setIsShiftModalOpen] = useState(false);
+    const [isFaceModalOpen, setIsFaceModalOpen] = useState(false);
+    const [selectedWorker, setSelectedWorker] = useState(null);
     const [selectedWorkerId, setSelectedWorkerId] = useState(null);
     const [shiftHours, setShiftHours] = useState(8);
 
@@ -41,6 +44,16 @@ const WorkerList = () => {
     const closeShiftModal = () => {
         setIsShiftModalOpen(false);
         setSelectedWorkerId(null);
+    };
+
+    const openFaceModal = (worker) => {
+        setSelectedWorker(worker);
+        setIsFaceModalOpen(true);
+    };
+
+    const closeFaceModal = () => {
+        setIsFaceModalOpen(false);
+        setSelectedWorker(null);
     };
 
     const handleConfirmAddShift = async () => {
@@ -120,6 +133,18 @@ const WorkerList = () => {
                                         Rs {worker.totalSalary}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                        {worker.faceDescriptor && worker.faceDescriptor.length > 0 ? (
+                                            <span className="text-gray-500 dark:text-gray-400 text-sm px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded inline-block">
+                                                Registered
+                                            </span>
+                                        ) : (
+                                            <button
+                                                onClick={() => openFaceModal(worker)}
+                                                className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded"
+                                            >
+                                                Register Face
+                                            </button>
+                                        )}
                                         <button
                                             onClick={() => openShiftModal(worker._id)}
                                             className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded"
@@ -141,6 +166,17 @@ const WorkerList = () => {
                         <div className="p-6 text-center text-gray-500 dark:text-gray-400">{t('common.noData')}</div>
                     )}
                 </div>
+            )}
+
+            {isFaceModalOpen && selectedWorker && (
+                <FaceRegistrationModal
+                    worker={selectedWorker}
+                    onClose={closeFaceModal}
+                    onSuccess={() => {
+                        closeFaceModal();
+                        fetchWorkers();
+                    }}
+                />
             )}
 
             {/* Add Shift Modal */}

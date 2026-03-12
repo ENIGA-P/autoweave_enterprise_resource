@@ -46,5 +46,9 @@ export default {
     verifyPayment: async (workerId, paymentData) => {
         const response = await axios.post(`${API_URL}/${workerId}/verify-payment`, paymentData);
         return response.data;
+    },
+    registerFace: async (workerId, faceDescriptor) => {
+        const response = await axios.post(`${API_URL}/${workerId}/face`, { faceDescriptor });
+        return response.data;
     }
 };
